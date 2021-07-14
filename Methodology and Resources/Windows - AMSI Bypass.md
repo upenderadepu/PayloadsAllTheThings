@@ -2,6 +2,7 @@
 
 ## Summary
 
+* [Which Endpoint Protection is Using AMSI](#which-endpoint-protection-is-using-amsi)
 * [Patching amsi.dll AmsiScanBuffer by rasta-mouse](#Patching-amsi.dll-AmsiScanBuffer-by-rasta-mouse)
 * [Dont use net webclient](#Dont-use-net-webclient)
 * [Amsi ScanBuffer Patch from -> https://www.contextis.com/de/blog/amsi-bypass](#Amsi-ScanBuffer-Patch)
@@ -16,6 +17,11 @@
 * [Use Powershell Version 2 - No AMSI Support there](#Using-PowerShell-version-2)
 * [Nishang all in one](#Nishang-all-in-one)
 * [Adam Chesters Patch](#Adam-Chester-Patch)
+* [AMSI.fail](#amsifail)
+
+## Which Endpoint Protection is Using AMSI
+
+* https://github.com/subat0mik/whoamsi/wiki/Which-Endpoint-Protection-is-Using-AMSI%3F
 
 
 # Patching amsi.dll AmsiScanBuffer by rasta-mouse
@@ -729,6 +735,11 @@ class Win32
 Add-Type -TypeDefinition $Winpatch -Language CSharp
 [patch]::it()
 ```
+
+## AMSI.fail
+
+> AMSI.fail generates obfuscated PowerShell snippets that break or disable AMSI for the current process. The snippets are randomly selected from a small pool of techniques/variations before being obfuscated. Every snippet is obfuscated at runtime/request so that no generated output share the same signatures. - https://amsi.fail/
+
 
 ## References
 
